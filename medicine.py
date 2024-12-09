@@ -2,10 +2,14 @@ import streamlit as st
 import requests
 from transformers import pipeline
 from PIL import Image
+from dotenv import load_dotenv
+import os
 
-# NVIDIA API Configuration
-NVIDIA_API_KEY = "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"  # Replace with actual API key
-NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
+load_dotenv()  # Load environment variables from .env
+
+API_KEY = os.getenv("API_KEY")
+BASE_URL = os.getenv("URL")
+model = os.getenv("model")
 
 # HuggingFace pipeline for local fallback
 local_model = pipeline("text-classification", model="distilbert-base-uncased")
@@ -17,7 +21,7 @@ def analyze_health_issue_nvidia(issue_text):
         "Content-Type": "application/json",
     }
     payload = {
-        "model": "nvidia/llama-3.1-nemotron-70b-instruct",
+        "model": model,
         "messages": [{"role": "user", "content": f"Suggest precautions and medicines for: {issue_text}"}],
         "temperature": 0.5,
         "max_tokens": 500,
